@@ -29,10 +29,13 @@ async def image(ctx, prompt):
 async def chat(ctx, prompt):
     await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt))
 
-
 @bot.command()
 async def ping(ctx):
     await ctx.send("Were you expecting something?\nIt's me, Pong!")
+
+@bot.command()
+async def ping(ctx):
+    await ctx.send("!ping\n!chat \"What is token?\"\n!image \"Some cool image\"")
 
 
 bot.run(BOT_TOKEN)
