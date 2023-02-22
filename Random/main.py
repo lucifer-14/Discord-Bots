@@ -27,11 +27,7 @@ async def image(ctx, prompt):
 
 @bot.command()
 async def chat(ctx, prompt):
-    # await ctx.send(c.chatgpt(OPENAI_TOKEN, prompt))
-    with open('test.txt', 'rt') as f:
-        await ctx.send(f.read())
-    # print(c.chatgpt(OPENAI_TOKEN, prompt))
-    # await ctx.send(c.chatgpt(OPENAI_TOKEN, prompt))
+    await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt))
 
 
 bot.run(BOT_TOKEN)
