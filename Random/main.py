@@ -34,7 +34,7 @@ async def ping(ctx):
     await ctx.send("Were you expecting something?\nIt's me, Pong!")
 
 @bot.command()
-async def help(ctx):
+async def command_list(ctx):
     await ctx.send("!ping\n!chat \"What is token?\"\n!image \"Some cool image\"")
 
 
