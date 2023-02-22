@@ -30,4 +30,9 @@ async def chat(ctx, prompt):
     await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt))
 
 
+@bot.command()
+async def ping(ctx):
+    await ctx.send("Were you expecting something?\nIt's me, Pong!")
+
+
 bot.run(BOT_TOKEN)
