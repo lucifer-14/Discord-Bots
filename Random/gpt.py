@@ -1,8 +1,13 @@
 import discord
 import openai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 client = discord.Client()
-openai.api_key = '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'
+openai.api_key = os.getenv('API_SECRET')
 
 @client.event
 async def on_ready():
