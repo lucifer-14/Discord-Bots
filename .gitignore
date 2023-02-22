@@ -129,9 +129,6 @@ dmypy.json
 .pyre/
 
 test.py
-<<<<<<< HEAD
 my_image.png
-=======
 .env
->>>>>>> 05d72b991a9bad2c0dd4c30c58adbdc76ee4bc38
 test.txt
