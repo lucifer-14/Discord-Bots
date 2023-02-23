@@ -70,23 +70,15 @@ async def chat_tts(ctx, prompt):
 async def chat_tts2(ctx, *, prompt):
     # Send a "thinking" message to the channel
     async with ctx.typing():
-        # Generate a response from the OpenAI GPT model
+    # Generate a response from the OpenAI GPT model
         response = await c.chatgpt(OPENAI_TOKEN, prompt)
-
-        # Send the response as a message to the Discord channel
-        await ctx.message.reply(response)
+    # Send the response as a message to the Discord channel
+    await ctx.message.reply(response)
     # Check if the prompt contains the '-tts' flag
     if '-tts' in prompt.lower():
-        # Generate a response from the OpenAI GPT model
-        response = await c.chatgpt(OPENAI_TOKEN, prompt)
-
-        # Send the response as a message to the Discord channel
-        await ctx.message.reply(response)
-
         # Remove the flag from the prompt
         prompt = prompt.lower().replace('-tts', '').strip()
         # Convert the response to speech using the gtts library
-        response = await c.chatgpt(OPENAI_TOKEN, prompt)
         tts = gTTS(response)
         tts.save('speech.mp3')
 
@@ -102,12 +94,6 @@ async def chat_tts2(ctx, *, prompt):
             await asyncio.sleep(1)
         await voice.disconnect()
 
-    else:
-        # Generate a response from the OpenAI GPT model
-        response = await c.chatgpt(OPENAI_TOKEN, prompt)
-
-        # Send the response as a message to the Discord channel
-        await ctx.message.reply(response)
 
 @bot.command()
 async def ping(ctx):
