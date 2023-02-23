@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import image_generator as ig
 import chat as c
 import youtube_dl
+import asyncio
+from gtts import gTTS
 
 load_dotenv()
 
@@ -47,27 +49,61 @@ async def on_ready():
 
 @bot.command()
 async def image(ctx, prompt):
-    await ig.generate_image(OPENAI_TOKEN, prompt)
-    with open('my_image.png', 'rb') as f:
-        picture = discord.File(f)
-        await ctx.send(file=picture)
+    async with ctx.typing():
+        await ig.generate_image(OPENAI_TOKEN, prompt)
+        with open('my_image.png', 'rb') as f:
+            picture = discord.File(f)
+            await ctx.send(file=picture)
 
 
 @bot.command()
 async def chat(ctx, prompt):
-    await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt))
+    async with ctx.typing():
+        await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt))
 
 @bot.command()
 async def chat_tts(ctx, prompt):
-    await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt), tts=True)
+    async with ctx.typing():
+        await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt), tts=True)
+
+@bot.command()
+async def chat_tts2(ctx, *, prompt):
+    # Send a "thinking" message to the channel
+    async with ctx.typing():
+    # Generate a response from the OpenAI GPT model
+        response = await c.chatgpt(OPENAI_TOKEN, prompt)
+    # Send the response as a message to the Discord channel
+    await ctx.message.reply(response)
+    # Check if the prompt contains the '-tts' flag
+    if '-tts' in prompt.lower():
+        # Remove the flag from the prompt
+        prompt = prompt.lower().replace('-tts', '').strip()
+        # Convert the response to speech using the gtts library
+        tts = gTTS(response)
+        tts.save('speech.mp3')
+
+        # Connect to the voice channel of the user who sent the command
+        voice = await ctx.author.voice.channel.connect()
+
+        # Play the speech to the voice channel
+        audio_source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(executable="C:/FFmpeg/bin/ffmpeg.exe", source="speech.mp3"))
+        voice.play(audio_source)
+
+        # Wait until the speech is finished playing and then disconnect from the voice channel
+        while voice.is_playing():
+            await asyncio.sleep(1)
+        await voice.disconnect()
+
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send("Were you expecting something?\nIt's me, Pong!")
+    async with ctx.typing():
+        await ctx.send("Were you expecting something?\nIt's me, Pong!")
 
 @bot.command()
 async def command_list(ctx):
-    await ctx.send("!ping\n!chat \"What is token?\"\n!image \"Some cool image\"")
+    async with ctx.typing():
+        await ctx.send("!ping\n!chat \"What is token?\"\n!image \"Some cool image\"\n!chat_tts \"What is token?\"")
 
 # @bot.command()
 # async def slash_test(ctx):
