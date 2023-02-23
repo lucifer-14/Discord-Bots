@@ -12,6 +12,4 @@ async def chatgpt(key, prompt):
         presence_penalty=0
     )
     return response.choices[0].text
-    # print(response)
-    # with open("test.txt", "wt") as f:
-    #     f.write(response.choices[0].text)
+

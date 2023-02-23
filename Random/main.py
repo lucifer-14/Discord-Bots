@@ -43,7 +43,7 @@ ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
 @bot.event
 async def on_ready():
-    print("hello")
+    print("The Bot is Online")
 
 @bot.command()
 async def image(ctx, prompt):
