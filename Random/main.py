@@ -49,19 +49,22 @@ async def on_ready():
 
 @bot.command()
 async def image(ctx, prompt):
-    await ig.generate_image(OPENAI_TOKEN, prompt)
-    with open('my_image.png', 'rb') as f:
-        picture = discord.File(f)
-        await ctx.send(file=picture)
+    async with ctx.typing():
+        await ig.generate_image(OPENAI_TOKEN, prompt)
+        with open('my_image.png', 'rb') as f:
+            picture = discord.File(f)
+            await ctx.send(file=picture)
 
 
 @bot.command()
 async def chat(ctx, prompt):
-    await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt))
+    async with ctx.typing():
+        await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt))
 
 @bot.command()
 async def chat_tts(ctx, prompt):
-    await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt), tts=True)
+    async with ctx.typing():
+        await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt), tts=True)
 
 @bot.command()
 async def chat_tts2(ctx, *, prompt):
@@ -108,11 +111,13 @@ async def chat_tts2(ctx, *, prompt):
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send("Were you expecting something?\nIt's me, Pong!")
+    async with ctx.typing():
+        await ctx.send("Were you expecting something?\nIt's me, Pong!")
 
 @bot.command()
 async def command_list(ctx):
-    await ctx.send("!ping\n!chat \"What is token?\"\n!image \"Some cool image\"\n!chat_tts \"What is token?\"")
+    async with ctx.typing():
+        await ctx.send("!ping\n!chat \"What is token?\"\n!image \"Some cool image\"\n!chat_tts \"What is token?\"")
 
 # @bot.command()
 # async def slash_test(ctx):
