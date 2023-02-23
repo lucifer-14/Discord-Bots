@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 import image_generator as ig
 import chat as c
+from gtts import gTTS
+import asyncio
 
 load_dotenv()
 
@@ -16,7 +18,7 @@ bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
-    print("hello")
+    print("The Bot is Online")
 
 @bot.command()
 async def image(ctx, prompt):
@@ -27,8 +29,41 @@ async def image(ctx, prompt):
 
 
 @bot.command()
-async def chat(ctx, prompt):
-    await ctx.send(await c.chatgpt(OPENAI_TOKEN, prompt))
+async def chat(ctx, *, prompt):
+    # Check if the prompt contains the '-tts' flag
+    if '-tts' in prompt.lower():
+        # Generate a response from the OpenAI GPT model
+        response = await c.chatgpt(OPENAI_TOKEN, prompt)
+        
+        # Send the response as a message to the Discord channel
+        await ctx.message.reply(response)
+        
+        # Remove the flag from the prompt
+        prompt = prompt.lower().replace('-tts', '').strip()
+        # Convert the response to speech using the gtts library
+        response = await c.chatgpt(OPENAI_TOKEN, prompt)
+        tts = gTTS(response)
+        tts.save('speech.mp3')
+
+        # Connect to the voice channel of the user who sent the command
+        voice = await ctx.author.voice.channel.connect()
+
+        # Play the speech to the voice channel
+        audio_source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(executable="C:/FFmpeg/bin/ffmpeg.exe", source="speech.mp3"))
+        voice.play(audio_source)
+
+        # Wait until the speech is finished playing and then disconnect from the voice channel
+        while voice.is_playing():
+            await asyncio.sleep(1)
+        await voice.disconnect()
+
+    else:
+        # Generate a response from the OpenAI GPT model
+        response = await c.chatgpt(OPENAI_TOKEN, prompt)
+        
+        # Send the response as a message to the Discord channel
+        await ctx.message.reply(response)
+
 
 @bot.command()
 async def ping(ctx):
